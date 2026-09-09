@@ -1,12 +1,22 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
-import { Star, GitFork, ArrowUpRight, ExternalLink } from "lucide-react";
+import { Star, GitFork, ArrowUpRight, ExternalLink, Images } from "lucide-react";
 import type { Repo } from "@/lib/github";
 import { languageColors } from "@/lib/github";
+import type { ProjectExtra } from "@/lib/config";
 
-export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
+interface ProjectCardProps {
+  repo: Repo;
+  extra?: ProjectExtra;
+  index: number;
+  /** Provided only when the project has a screenshot gallery to open. */
+  onOpen?: () => void;
+}
+
+export function ProjectCard({ repo, extra, index, onOpen }: ProjectCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   // Track cursor position to power a spotlight glow that follows the mouse.
   const mx = useMotionValue(0);
@@ -20,6 +30,11 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
     my.set(e.clientY - rect.top);
   }
 
+  const shots = extra?.screenshots ?? [];
+  const hasGallery = shots.length > 0;
+  const description = extra?.description || repo.description;
+  const liveUrl = extra?.liveUrl || repo.homepage;
+
   const langColor = repo.language
     ? languageColors[repo.language] ?? "#8b5cf6"
     : "#8b5cf6";
@@ -28,20 +43,41 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
     <motion.div
       ref={ref}
       onMouseMove={onMouseMove}
+      onClick={onOpen}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
       whileHover={{ y: -6 }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border p-6 glass"
+      className={`group relative flex flex-col overflow-hidden rounded-2xl border glass ${
+        hasGallery ? "cursor-pointer" : ""
+      }`}
     >
       {/* mouse spotlight */}
       <motion.div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: spotlight }}
       />
 
-      <div className="relative flex flex-1 flex-col">
+      {/* cover screenshot (only when a gallery exists) */}
+      {hasGallery && (
+        <div className="relative aspect-video w-full overflow-hidden border-b bg-black/30">
+          <Image
+            src={shots[0]}
+            alt={`${repo.name} preview`}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {shots.length > 1 && (
+            <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-xs text-white backdrop-blur">
+              <Images size={13} /> {shots.length}
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="relative flex flex-1 flex-col p-6">
         <div className="mb-3 flex items-start justify-between gap-3">
           <h3 className="text-lg font-semibold tracking-tight transition-colors group-hover:text-accent-3">
             {repo.name}
@@ -50,6 +86,7 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
             href={repo.html_url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             aria-label={`Open ${repo.name} on GitHub`}
             className="shrink-0 text-muted transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
           >
@@ -58,7 +95,7 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
         </div>
 
         <p className="mb-5 flex-1 text-sm leading-relaxed text-muted">
-          {repo.description || "No description provided."}
+          {description || "No description provided."}
         </p>
 
         {/* topics */}
@@ -96,11 +133,12 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
               <GitFork size={14} /> {repo.forks_count}
             </span>
           )}
-          {repo.homepage && (
+          {liveUrl && (
             <a
-              href={repo.homepage}
+              href={liveUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="ml-auto flex items-center gap-1 text-accent-3 hover:underline"
             >
               <ExternalLink size={14} /> Live

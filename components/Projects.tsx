@@ -3,7 +3,7 @@ import { getRepos } from "@/lib/github";
 import { config } from "@/lib/config";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Reveal } from "./ui/Reveal";
-import { ProjectCard } from "./ProjectCard";
+import { ProjectsGrid } from "./ProjectsGrid";
 
 // Server component: fetches repos at request time (cached hourly).
 export async function Projects() {
@@ -17,11 +17,7 @@ export async function Projects() {
 
       {repos.length > 0 ? (
         <>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {repos.map((repo, i) => (
-              <ProjectCard key={repo.id} repo={repo} index={i} />
-            ))}
-          </div>
+          <ProjectsGrid repos={repos} />
 
           <Reveal className="mt-12 flex justify-center">
             <a
