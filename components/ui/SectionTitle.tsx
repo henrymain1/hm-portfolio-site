@@ -1,17 +1,24 @@
 import { Reveal } from "./Reveal";
 
 interface SectionTitleProps {
-  /** Small label shown above the title, e.g. "01" or "Work". */
-  eyebrow: string;
+  /** Zero-padded index, e.g. "01". */
+  index: string;
+  /** Uppercase mono kicker, e.g. "ABOUT". */
+  kicker: string;
   title: string;
 }
 
-export function SectionTitle({ eyebrow, title }: SectionTitleProps) {
+export function SectionTitle({ index, kicker, title }: SectionTitleProps) {
   return (
     <Reveal className="mb-12">
-      <p className="mb-2 font-mono text-sm text-accent-3">{eyebrow}</p>
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-      <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-accent-1 to-accent-3" />
+      <div className="mb-4 flex items-center gap-3">
+        <span className="mono text-sm text-green">[{index}]</span>
+        <span className="label">{kicker}</span>
+        <span className="h-px flex-1 bg-line" />
+      </div>
+      <h2 className="max-w-3xl text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+        {title}
+      </h2>
     </Reveal>
   );
 }

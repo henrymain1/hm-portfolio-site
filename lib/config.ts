@@ -40,23 +40,79 @@ export const config = {
 My background spans full-stack development (Python, Django, React, C#/.NET) and the AI stack (Azure OpenAI, Vertex AI, MCP, n8n), so I'm comfortable owning a feature from prompt design all the way to deployment.
 
 Based in Hong Kong (Top Talent Pass Scheme). When I'm not shipping, I'm benchmarking new models and tinkering with agentic workflows.`,
-    // Tech you want to show off. Grouped chips.
-    stack: [
-      "Python",
-      "JavaScript",
-      "C#/.NET",
-      "React.js",
-      "Django REST",
-      "Azure OpenAI",
-      "Vertex AI (Gemini)",
-      "RAG & pgvector",
-      "Agentic AI / MCP",
-      "n8n",
-      "TensorFlow",
-      "PyTorch",
-      "PostgreSQL",
-      "Azure Cosmos DB",
-      "Google Cloud",
+    // Skills, grouped exactly like the resume's Skills section.
+    skills: [
+      {
+        category: "AI / LLM Engineering",
+        items: [
+          "GenAI",
+          "LLM Evaluation",
+          "RAG & Semantic Search",
+          "Prompt Engineering",
+          "Agentic AI",
+          "Function / Tool Calling",
+          "LLM Orchestration",
+          "Model Selection",
+          "MCP",
+        ],
+      },
+      {
+        category: "AI Tools & Services",
+        items: [
+          "Azure OpenAI",
+          "Vertex AI (Gemini)",
+          "n8n",
+          "OpenClaw",
+          "Ollama",
+          "LM Studio",
+          "Opencode",
+          "Cursor",
+        ],
+      },
+      {
+        category: "Languages",
+        items: [
+          "Python",
+          "JavaScript",
+          "C",
+          "C++",
+          "Java",
+          "Kotlin",
+          "SystemVerilog",
+        ],
+      },
+      {
+        category: "ML & Data",
+        items: [
+          "TensorFlow",
+          "PyTorch",
+          "scikit-learn",
+          "XGBoost",
+          "Pandas",
+          "NumPy",
+          "PostgreSQL (pgvector)",
+          "MongoDB",
+          "Azure Cosmos DB",
+        ],
+      },
+      {
+        category: "Web & Tools",
+        items: [
+          "HTML",
+          "CSS",
+          "React.js",
+          "Django REST Framework",
+          "Git",
+          "Sentry",
+          "RESTful APIs",
+          "Azure",
+          "Google Cloud",
+          "Microsoft Excel",
+          "MATLAB",
+          "Postman",
+          "Metabase",
+        ],
+      },
     ],
   },
 
@@ -65,7 +121,7 @@ Based in Hong Kong (Top Talent Pass Scheme). When I'm not shipping, I'm benchmar
     // 👉 REQUIRED for live projects: your GitHub username.
     username: "henrymain1",
     // Repos listed here are pinned to the top, in this order (use the exact repo name).
-    featured: [] as string[],
+    featured: ["anki-card-manager", "daily-pages"] as string[],
     // Repos you never want shown (exact repo names).
     hidden: ["henrymain1", "hm-portfolio-site"] as string[], // profile README + this portfolio repo
     // Hide forks / archived repos from the grid.
@@ -76,6 +132,13 @@ Based in Hong Kong (Top Talent Pass Scheme). When I'm not shipping, I'm benchmar
     // Per-project screenshots + overrides, keyed by exact repo name.
     // See the ProjectExtra type above for the shape.
     projects: {
+      "anki-card-manager": {
+        // Add screenshots to public/projects/anki-card-manager/ then list them:
+        screenshots: [
+          // "/projects/anki-card-manager/1.png",
+          // "/projects/anki-card-manager/2.png",
+        ],
+      },
       "daily-pages": {
         // Add screenshots to public/projects/daily-pages/ then list them:
         screenshots: [

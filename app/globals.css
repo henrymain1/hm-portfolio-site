@@ -1,36 +1,40 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   Theme tokens (Tailwind v4 — configured in CSS)
+   Palette — "technical spec-sheet × terminal"
+   Warm near-black · warm off-white · lime-green signal · amber second signal.
+   One dominant, one accent, one rare second accent (60/30/10). No indigo.
    ============================================================================ */
 :root {
-  --background: #05060a;
-  --foreground: #e6e8ee;
-  --muted: #9aa0ac;
-  --card: rgba(255, 255, 255, 0.03);
-  --border: rgba(255, 255, 255, 0.08);
+  color-scheme: dark;
 
-  /* Accent gradient stops */
-  --accent-1: #8b5cf6; /* violet  */
-  --accent-2: #6366f1; /* indigo  */
-  --accent-3: #22d3ee; /* cyan    */
-  --accent-4: #ec4899; /* pink    */
+  --bg: #0b0d0a; /* warm near-black */
+  --bg-elev: #12140f; /* elevated surface */
+  --bg-elev-2: #171a12; /* hover / raised */
+  --fg: #eaece1; /* warm off-white, high contrast */
+  --muted: #a1a595; /* warm muted — AA on --bg, never grey-on-grey body */
+  --line: #2a2e22; /* hairline */
+  --line-bright: #3d4230;
+
+  --green: #a3e635; /* lime signal */
+  --green-dim: #7ba81f;
+  --amber: #fbbf24; /* amber — used rarely, for a second state */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-elev-2: var(--bg-elev-2);
+  --color-fg: var(--fg);
   --color-muted: var(--muted);
-  --color-accent-1: var(--accent-1);
-  --color-accent-2: var(--accent-2);
-  --color-accent-3: var(--accent-3);
-  --color-accent-4: var(--accent-4);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-* {
-  border-color: var(--border);
+  --color-line: var(--line);
+  --color-line-bright: var(--line-bright);
+  --color-green: var(--green);
+  --color-green-dim: var(--green-dim);
+  --color-amber: var(--amber);
+  --font-sans: var(--font-display);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 html {
@@ -38,14 +42,13 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-display), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* Respect users who prefer reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -58,78 +61,36 @@ body {
 }
 
 /* ============================================================================
-   Reusable helpers
+   Helpers
    ============================================================================ */
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(
-    120deg,
-    var(--accent-1),
-    var(--accent-3) 50%,
-    var(--accent-4)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Monospace technical label — the signature detail of this direction. */
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-feature-settings: "ss01";
 }
 
-/* Glass card */
-.glass {
-  background: var(--card);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
+.label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* Faint dotted grid backdrop */
-.grid-bg {
-  background-image: radial-gradient(
-    rgba(255, 255, 255, 0.06) 1px,
-    transparent 1px
-  );
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+/* Film grain — a fixed, subtle texture that keeps flat dark areas from feeling
+   plasticky. Pure CSS via an inline SVG turbulence. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ============================================================================
-   Keyframes
-   ============================================================================ */
-
-/* Slow drifting aurora blobs */
-@keyframes aurora {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(6%, -8%) scale(1.15);
-  }
-  66% {
-    transform: translate(-8%, 6%) scale(0.9);
-  }
-}
-.animate-aurora {
-  animation: aurora 22s ease-in-out infinite;
-}
-
-/* Animated gradient border shift */
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 6s ease infinite;
-}
-
-/* Blinking cursor for the typewriter */
+/* Terminal caret */
 @keyframes blink {
   0%,
   100% {
@@ -139,24 +100,35 @@ body {
     opacity: 0;
   }
 }
-.animate-blink {
-  animation: blink 1s step-end infinite;
+.caret {
+  display: inline-block;
+  width: 0.6ch;
+  background: var(--green);
+  animation: blink 1.1s step-end infinite;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--accent-1), var(--accent-3));
-  border-radius: 8px;
-  border: 2px solid var(--background);
+/* Focus ring — real, visible, keyboard-only */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
 }
 
 ::selection {
-  background: var(--accent-1);
-  color: white;
+  background: var(--green);
+  color: #0b0d0a;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-bright);
+  border: 3px solid var(--bg);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green-dim);
 }

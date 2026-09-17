@@ -8,38 +8,29 @@ export function Experience() {
   if (config.experience.length === 0) return null;
 
   return (
-    <section
-      id="experience"
-      className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24"
-    >
-      <SectionTitle eyebrow="03 — Journey" title="Experience & education" />
+    <section id="experience" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-28">
+      <SectionTitle index="03" kicker="Career" title="Where I've worked." />
 
-      <div className="relative ml-3 border-l border-white/10 pl-8">
+      <div className="relative ml-2 border-l border-line pl-8">
         {config.experience.map((item, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="relative mb-10 last:mb-0"
+            transition={{ duration: 0.4, delay: i * 0.05 }}
+            className="relative mb-11 last:mb-0"
           >
             {/* node */}
-            <span className="absolute -left-[41px] top-1.5 flex h-4 w-4 items-center justify-center">
-              <span className="absolute h-4 w-4 animate-ping rounded-full bg-accent-3/40" />
-              <span className="h-3 w-3 rounded-full bg-gradient-to-r from-accent-1 to-accent-3" />
-            </span>
+            <span className="absolute -left-[37px] top-2 h-2.5 w-2.5 bg-green" />
 
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-lg font-semibold">{item.role}</h3>
-              <span className="font-mono text-sm text-accent-3">
-                {item.period}
-              </span>
+            <div className="mono mb-1 text-xs text-muted">{item.period}</div>
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <h3 className="text-lg font-semibold text-fg">{item.role}</h3>
+              <span className="text-muted">·</span>
+              <span className="text-green">{item.company}</span>
             </div>
-            <p className="text-sm font-medium text-foreground/80">
-              {item.company}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
               {item.description}
             </p>
           </motion.div>

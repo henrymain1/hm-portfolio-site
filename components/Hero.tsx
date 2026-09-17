@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowDown, Mail, Globe, FileText } from "lucide-react";
 import { config } from "@/lib/config";
-import { XIcon, GithubIcon, LinkedinIcon } from "./ui/icons";
+import { GenerativeBackground } from "./GenerativeBackground";
+import { GithubIcon, LinkedinIcon, XIcon } from "./ui/icons";
+import { Globe } from "lucide-react";
 
 /** Cycles through config.roles, typing then deleting each one. */
 function useTypewriter(words: readonly string[]) {
@@ -20,9 +21,8 @@ function useTypewriter(words: readonly string[]) {
 
     const timeout = setTimeout(
       () => {
-        if (done) {
-          setDeleting(true);
-        } else if (cleared) {
+        if (done) setDeleting(true);
+        else if (cleared) {
           setDeleting(false);
           setI((n) => n + 1);
         } else {
@@ -31,9 +31,8 @@ function useTypewriter(words: readonly string[]) {
           );
         }
       },
-      done ? 1600 : deleting ? 45 : 80
+      done ? 1800 : deleting ? 40 : 70
     );
-
     return () => clearTimeout(timeout);
   }, [text, deleting, i, words]);
 
@@ -47,126 +46,135 @@ const socialIcons = {
   website: Globe,
 } as const;
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export function Hero() {
   const role = useTypewriter(config.roles);
-
   const socials = Object.entries(config.socials).filter(
     ([, url]) => url && url.length > 0
   ) as [keyof typeof socialIcons, string][];
 
+  const [first, ...rest] = config.name.split(" ");
+  const last = rest.join(" ");
+
   return (
     <section
       id="top"
-      className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 text-center"
+      className="relative flex min-h-screen items-center overflow-hidden"
     >
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-5 rounded-full border px-4 py-1.5 text-sm text-muted glass"
-      >
-        👋 Hi, I&apos;m
-      </motion.p>
+      {/* generative field */}
+      <GenerativeBackground />
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-        className="max-w-4xl text-5xl font-extrabold tracking-tight sm:text-7xl"
-      >
-        <span className="gradient-text animate-gradient">{config.name}</span>
-      </motion.h1>
+      {/* legibility scrim — solid behind the text (left), open on the right so
+          the generative field reads as the feature it is */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-bg from-25% via-bg/70 to-bg/10" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.25 }}
-        className="mt-4 h-9 text-xl font-medium text-foreground/90 sm:text-2xl"
-      >
-        <span className="text-muted">a </span>
-        <span>{role}</span>
-        <span className="animate-blink text-accent-3">|</span>
-      </motion.div>
-
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="mt-6 max-w-2xl text-balance text-base leading-relaxed text-muted sm:text-lg"
-      >
-        {config.tagline}
-      </motion.p>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.55 }}
-        className="mt-9 flex flex-wrap items-center justify-center gap-4"
-      >
-        <a
-          href="#projects"
-          className="rounded-full bg-gradient-to-r from-accent-1 to-accent-3 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-1/25 transition-transform hover:scale-105"
+      <div className="relative z-[2] mx-auto w-full max-w-6xl px-6 pt-24">
+        {/* system meta line */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="label mb-6 flex flex-wrap items-center gap-x-3 gap-y-1"
         >
-          View my work
-        </a>
-        {config.resumeUrl ? (
-          <a
-            href={config.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold glass transition-colors hover:border-accent-3/50"
-          >
-            <FileText size={16} /> Resume
-          </a>
-        ) : (
-          <a
-            href={`mailto:${config.email}`}
-            className="flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold glass transition-colors hover:border-accent-3/50"
-          >
-            <Mail size={16} /> Contact me
-          </a>
-        )}
-      </motion.div>
+          <span className="text-green">{config.roles[0]}</span>
+          <span className="text-line-bright">/</span>
+          <span>Hong Kong</span>
+          <span className="text-line-bright">/</span>
+          <span className="text-amber">Top Talent Pass</span>
+        </motion.div>
 
-      {/* socials */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.7 }}
-        className="mt-10 flex items-center gap-5"
-      >
-        {socials.map(([key, url]) => {
-          const Icon = socialIcons[key];
-          if (!Icon) return null;
-          return (
+        {/* name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease }}
+          className="text-6xl font-extrabold uppercase leading-[0.92] tracking-tight text-fg sm:text-8xl"
+        >
+          {first}
+          <br />
+          <span className="text-green">{last}</span>
+        </motion.h1>
+
+        {/* role prompt with terminal caret */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15, ease }}
+          className="mono mt-6 text-lg text-muted sm:text-xl"
+        >
+          <span className="text-green-dim">~/</span>
+          <span className="text-fg">{role}</span>
+          <span className="caret ml-0.5 h-5 translate-y-0.5" />
+        </motion.div>
+
+        {/* tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.28, ease }}
+          className="mt-6 max-w-xl leading-relaxed text-muted"
+        >
+          {config.tagline}
+        </motion.p>
+
+        {/* actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease }}
+          className="mt-9 flex flex-wrap items-center gap-3"
+        >
+          <a
+            href="#projects"
+            className="bg-green px-6 py-3 text-sm font-semibold text-bg transition-colors hover:bg-[#b6f04d] focus-visible:outline-offset-4"
+          >
+            View work
+          </a>
+          {config.resumeUrl && (
             <a
-              key={key}
-              href={url}
+              href={config.resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={key}
-              className="text-muted transition-all hover:-translate-y-1 hover:text-accent-3"
+              className="border border-line-bright px-6 py-3 text-sm font-medium text-fg transition-colors hover:border-green hover:text-green"
             >
-              <Icon size={22} />
+              Résumé
             </a>
-          );
-        })}
-      </motion.div>
+          )}
+          <a
+            href={`mailto:${config.email}`}
+            className="mono px-2 py-3 text-sm text-muted underline-offset-4 transition-colors hover:text-fg hover:underline"
+          >
+            {config.email}
+          </a>
+        </motion.div>
 
-      {/* scroll cue */}
-      <motion.a
-        href="#about"
-        aria-label="Scroll down"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{
-          opacity: { delay: 1, duration: 1 },
-          y: { repeat: Infinity, duration: 1.8, ease: "easeInOut" },
-        }}
-        className="absolute bottom-8 text-muted hover:text-foreground"
-      >
-        <ArrowDown size={22} />
-      </motion.a>
+        {/* socials */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.55 }}
+          className="mt-10 flex items-center gap-5"
+        >
+          {socials.map(([key, url]) => {
+            const Icon = socialIcons[key];
+            if (!Icon) return null;
+            return (
+              <a
+                key={key}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={key}
+                className="text-muted transition-colors hover:text-green"
+              >
+                <Icon size={20} />
+              </a>
+            );
+          })}
+        </motion.div>
+      </div>
     </section>
   );
 }

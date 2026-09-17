@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "motion/react";
 import { config } from "@/lib/config";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Reveal } from "./ui/Reveal";
@@ -9,39 +6,47 @@ export function About() {
   const paragraphs = config.about.body.split(/\n\s*\n/).filter(Boolean);
 
   return (
-    <section id="about" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
-      <SectionTitle eyebrow="01 — About" title="A little about me" />
+    <section id="about" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-28">
+      <SectionTitle index="01" kicker="About" title="AI/LLM engineer, full-stack by habit." />
 
-      <div className="grid gap-12 md:grid-cols-5">
-        <Reveal from="left" className="space-y-4 md:col-span-3">
+      <Reveal>
+        <div className="max-w-2xl space-y-4">
           {paragraphs.map((p, i) => (
             <p key={i} className="leading-relaxed text-muted">
               {p}
             </p>
           ))}
-        </Reveal>
+        </div>
+      </Reveal>
 
-        <Reveal from="right" delay={0.15} className="md:col-span-2">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground/80">
-            Tech I work with
-          </h3>
-          <div className="flex flex-wrap gap-2.5">
-            {config.about.stack.map((tech, i) => (
-              <motion.span
-                key={tech}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04, duration: 0.3 }}
-                whileHover={{ y: -3 }}
-                className="glass cursor-default rounded-lg px-3 py-1.5 text-sm text-foreground/90 transition-colors hover:border-accent-3/50 hover:text-accent-3"
-              >
-                {tech}
-              </motion.span>
-            ))}
-          </div>
-        </Reveal>
-      </div>
+      {/* Skills — a technical spec sheet, grouped like the resume. */}
+      <Reveal className="mt-16">
+        <div className="mb-5 flex items-center gap-3">
+          <span className="label">Stack</span>
+          <span className="h-px flex-1 bg-line" />
+        </div>
+
+        <dl className="divide-y divide-line border-y border-line">
+          {config.about.skills.map((group) => (
+            <div
+              key={group.category}
+              className="grid gap-3 py-5 md:grid-cols-[220px_1fr] md:gap-8"
+            >
+              <dt className="mono text-sm text-fg">{group.category}</dt>
+              <dd className="flex flex-wrap gap-x-2 gap-y-2">
+                {group.items.map((item) => (
+                  <span
+                    key={item}
+                    className="mono border border-line px-2 py-1 text-xs text-muted transition-colors hover:border-green/60 hover:text-green"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
     </section>
   );
 }

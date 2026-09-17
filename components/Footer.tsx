@@ -2,15 +2,13 @@ import { config } from "@/lib/config";
 
 export function Footer() {
   return (
-    <footer className="border-t px-6 py-8">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 text-sm text-muted sm:flex-row">
+    <footer className="border-t border-line px-6 py-8">
+      <div className="mono mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 text-xs text-muted sm:flex-row sm:items-center">
         <p>
-          © {new Date().getFullYear()} {config.name}. All rights reserved.
+          © {new Date().getFullYear()} {config.name}
         </p>
-        <p>
-          Built with{" "}
-          <span className="text-accent-3">Next.js</span> &{" "}
-          <span className="text-accent-1">Motion</span>.
+        <p className="text-line-bright">
+          Built with Next.js · deployed on Vercel
         </p>
       </div>
     </footer>
