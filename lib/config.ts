@@ -18,6 +18,22 @@ export interface ProjectExtra {
   liveUrl?: string;
 }
 
+/** A hand-curated flagship project, featured above the GitHub grid. */
+export interface Flagship {
+  name: string;
+  tagline: string;
+  url: string;
+  /** Small note next to the link, e.g. "invite only". */
+  note?: string;
+  year?: string;
+  /** One string per paragraph. */
+  description: string[];
+  languages?: string[];
+  stack: string[];
+  /** Images in public/projects/<name>/; first is the cover. */
+  screenshots: string[];
+}
+
 export const config = {
   // --- Identity ---------------------------------------------------------------
   name: "Henry Main",
@@ -148,6 +164,37 @@ Based in Hong Kong (Top Talent Pass Scheme). When I'm not shipping, I'm benchmar
       },
     } as Record<string, ProjectExtra>,
   },
+
+  // --- Flagship project -------------------------------------------------------
+  // A hand-curated project featured above the live GitHub grid. Set to null to hide.
+  flagship: {
+    name: "LinguaVid",
+    tagline: "Learn from videos you actually want to watch.",
+    url: "https://linguavid.app",
+    year: "2026",
+    // Each string is a paragraph.
+    description: [
+      "LinguaVid turns any YouTube video into a read-along language lesson. The video plays beside its transcript, the spoken line is highlighted, every word carries its reading, and tapping a word shows what it means in that sentence. Words you save become a personal dictionary with replayable example sentences, and cards that go straight into Anki.",
+      "Captions lie, often. Plenty of videos show Standard Written Chinese under spoken Cantonese, so when the subtitles don't match the speech, a Python pipeline transcribes what was actually said with speech recognition. Then Claude picks each word's sense in context, translates each line, and writes the grammar notes. A validator rejects any change to the transcript's characters, so the text always matches the audio.",
+    ],
+    languages: ["Cantonese", "Mandarin", "Japanese"],
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Cloudflare Workers",
+      "Supabase",
+      "Python",
+      "Qwen-Audio ASR",
+      "Claude",
+      "AnkiConnect",
+    ],
+    screenshots: [
+      "/projects/linguavid/1.png",
+      "/projects/linguavid/2.png",
+      "/projects/linguavid/3.png",
+    ],
+  } as Flagship | null,
 
   // --- Experience / Timeline --------------------------------------------------
   // Set to [] to hide the section entirely.

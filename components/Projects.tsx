@@ -3,6 +3,7 @@ import { config } from "@/lib/config";
 import { SectionTitle } from "./ui/SectionTitle";
 import { Reveal } from "./ui/Reveal";
 import { ProjectsGrid } from "./ProjectsGrid";
+import { Flagship } from "./Flagship";
 
 // Server component: fetches repos at request time (cached hourly).
 export async function Projects() {
@@ -13,6 +14,8 @@ export async function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-28">
       <SectionTitle index="02" kicker="Work" title="Things I've built." />
+
+      <Flagship />
 
       {repos.length > 0 ? (
         <>

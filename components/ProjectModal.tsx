@@ -169,14 +169,16 @@ export function ProjectModal({ repo, extra, onClose }: ProjectModalProps) {
             )}
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mono inline-flex items-center gap-2 border border-line-bright px-5 py-2.5 text-sm text-fg transition-colors hover:border-green hover:text-green"
-              >
-                <GithubIcon size={15} /> View code
-              </a>
+              {repo.html_url && (
+                <a
+                  href={repo.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mono inline-flex items-center gap-2 border border-line-bright px-5 py-2.5 text-sm text-fg transition-colors hover:border-green hover:text-green"
+                >
+                  <GithubIcon size={15} /> View code
+                </a>
+              )}
               {liveUrl && (
                 <a
                   href={liveUrl}
